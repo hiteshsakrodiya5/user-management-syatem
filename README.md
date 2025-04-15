@@ -29,7 +29,9 @@ git clone git@github.com:hiteshsakrodiya5/user-management-syatem.git
 
 ### 2. Create Virtual Environment & Install Dependencies
 python -m venv venv
+
 source venv/bin/activate  # On Windows: venv\Scripts\activate
+
 pip install -r requirements.txt
 
 
@@ -47,6 +49,7 @@ DATABASES = {
 
 Then Run:
 python manage.py makemigrations
+
 python manage.py migrate
 
 I have also created a django custom command for run automation task like 
