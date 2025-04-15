@@ -144,3 +144,5 @@ SIMPLE_JWT = {
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
     "TOKEN_BLACKLIST_ENABLED": True,
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
