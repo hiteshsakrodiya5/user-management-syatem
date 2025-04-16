@@ -79,7 +79,6 @@ class LogoutView(APIView):
 
     def post(self, request):
         try:
-            breakpoint()
             refresh_token = request.data.get("refresh")
             token = RefreshToken(refresh_token)
             token.blacklist()
