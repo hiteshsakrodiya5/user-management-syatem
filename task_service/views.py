@@ -12,9 +12,34 @@ from utils.permission import IsManagerOrAdmin, IsUserOrAdmin
 
 
 class TaskAssignmentView(APIView):
+    """
+    API view to assign a task to a user.
+
+    Only users with Manager or Admin roles (based on the IsManagerOrAdmin permission class)
+    are authorized to assign tasks.
+
+    Permissions:
+        - Requires custom IsManagerOrAdmin permission.
+
+    Methods:
+        post(request): Assigns a new task to a user.
+    """
+
     permission_classes = [IsManagerOrAdmin]
 
     def post(self, request):
+        """
+        Assigns a new task to a user.
+
+        :param request: HTTP request object containing the task details (name, description, assigned user, deadline).
+        :type request: rest_framework.request.Request
+
+        :return: Response containing success message or error details.
+        :rtype: rest_framework.response.Response
+
+        :raises Exception: For any unexpected server-side errors while assigning the task.
+        """
+
         try:
             task_serializer = TaskCreateSerializer(data=request.data)
             if task_serializer.is_valid():
@@ -45,9 +70,35 @@ class TaskAssignmentView(APIView):
 
 
 class TaskUserAssignedCreateView(APIView):
+    """
+    API view to retrieve tasks assigned to the authenticated user.
+
+    This endpoint returns tasks based on the authenticated user's role:
+    - Regular users will only see tasks assigned to them.
+    - Managers and Admins will see all tasks.
+
+    Permissions:
+        - Requires the user to be authenticated.
+
+    Methods:
+        get(request): Retrieves tasks assigned to the authenticated user.
+    """
+
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
+        """
+        Retrieves tasks assigned to the authenticated user or all tasks if the user is a manager/admin.
+
+        :param request: HTTP request object made by an authenticated user.
+        :type request: rest_framework.request.Request
+
+        :return: Response containing the list of tasks or error details.
+        :rtype: rest_framework.response.Response
+
+        :raises Exception: For any unexpected server-side errors while fetching the tasks.
+        """
+
         try:
             user = request.user
             if user.role == "user":
@@ -67,9 +118,38 @@ class TaskUserAssignedCreateView(APIView):
 
 
 class UpdateTaskStatus(APIView):
+    """
+    API view to update the status of a specific task by its primary key (task ID).
+
+    This endpoint allows users with the appropriate permissions (User or Admin) to update
+    the status of a task.
+
+    Permissions:
+        - Requires custom IsUserOrAdmin permission.
+
+    Methods:
+        put(request, pk): Updates the status of a task specified by its primary key (ID).
+    """
+
     permission_classes = [IsUserOrAdmin]
 
     def put(self, request, pk):
+        """
+        Updates the status of a task specified by its primary key (ID).
+
+        :param request: HTTP request object containing the task status data to be updated.
+        :type request: rest_framework.request.Request
+
+        :param pk: Primary key of the task whose status is being updated.
+        :type pk: int
+
+        :return: Response containing updated task data or error details.
+        :rtype: rest_framework.response.Response
+
+        :raises Task.DoesNotExist: If the task with the provided ID is not found.
+        :raises Exception: For any unexpected server-side errors while updating the task.
+        """
+
         try:
             task = Task.objects.get(pk=pk)
             serializer = UpdateTaskStatusSerializer(task, data=request.data)
