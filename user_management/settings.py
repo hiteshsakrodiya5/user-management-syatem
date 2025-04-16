@@ -145,4 +145,4 @@ SIMPLE_JWT = {
     "TOKEN_BLACKLIST_ENABLED": True,
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
